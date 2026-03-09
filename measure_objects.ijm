@@ -1,4 +1,4 @@
-# bme160-final
+/* bme160-final
 
 /*
  * Measure Objects Script
@@ -61,8 +61,8 @@ macro "Measure Objects" {
 function processImage() {
     // Get image title for results
     title = getTitle();
-    
-    // Work on a copy to avoid modifying original if possible, or just undo later
+    run("Duplicate...", "title=working_copy");
+    selectWindow("working_copy"); // Work on a copy to avoid modifying original if possible, or just undo later
     // For simplicity in macro, we work on active image.
     
     // 3. Pre-processing
@@ -76,10 +76,24 @@ function processImage() {
     // "dark" means dark objects on light background. If your objects are light, uncheck this in UI manually or we can try to detect.
     // For general purpose, we usually assume 'Auto' works.
     
+    //-------> changing from dark to light - Jacob
+    // setAutoThreshold("Default light");
+   
+    // Allow user to use preset thresholding or manually set personally. (Jenni)
+    threshMode = getBoolean("Use automatic thresholding?\n'Yes' = Auto (Otsu)\n'No' = Set Manually");
+    if (threshMode) {
+    	// Otsu works better than default for Brightfield images
+    	// No "dark" suffix since these organoids are dark against light background. 
+    	setAutoThreshold("Otsu");
+    } else {
+    	run("Threshold...");
+    	waitForUser("Adjust threshold, click 'Apply', then press 'OK' to continue.");
+    }
     
-      //-------> changing from dark to light - Jacob
-    setAutoThreshold("Default light");
-    
+    // Converting to binary mask so Analyze Image detects objects 
+    run("Convert to Mask");
+	run("Fill Holes");   // fill organoid interior -> more accurate area measurement
+	
     // 5. Analyze Particles
     // size=0-Infinity: measure everything
     // circularity=0.00-1.00: explicit shape not filtered
@@ -88,8 +102,6 @@ function processImage() {
     // exclude: exlude particles touching edges (optional, standard good practice)
     // clear: DO NOT clear results if batch processing, so we accumulate. 
     // But if single image, maybe we want to clear? Let's not clear to be safe, user can clear.
-    
-    run("Analyze Particles...", "size=5000-Infinity show=Overlay display exclude include summarize");
     
     
     //-----------> changed sized particles (e.g., 2000, 10000, 50000 depending on image scale) - Jacob
