@@ -1,0 +1,3 @@
+To be edited. 
+
+Our work builds on an image-analysis pipeline developed by PhD candidate Christopher Nguyen, which successfully identifies high-variance intensity features in brightfield organoid images. However, these features are dominated by optical edge artifacts and background noise rather than biologically meaningful morphological structures. We aim to extend this pipeline into a Principal Component analysis in FIJI to undergo digit cluster edge-formation and digit cluster classification for measurement of surface area, circumference, and Feret’s diameter (which includes max caliper diameter) to ultimately establish a method for classification of organoid mutant morphology. 
