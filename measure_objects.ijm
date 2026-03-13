@@ -68,7 +68,6 @@ function processImage() {
     // 3. Pre-processing
     // Always convert to 8-bit (grayscale) for thresholding 
     run("8-bit");                       
-    //run("Gaussian Blur...", "sigma=5"); //Add Gaussian Blur to blend in "halo" edges
     
     // 4. Thresholding
     // Auto-threshold to separate objects from background
@@ -91,11 +90,7 @@ function processImage() {
     
     // Converting to binary mask so Analyze Image detects objects 
     run("Convert to Mask");
-    //run("Dilate");
-    //run("Dilate");
 	run("Fill Holes");   // fill organoid interior -> more accurate area measurement
-	//run("Erode");
-	//run("Erode");
 	
     // 5. Analyze Particles
     // size=0-Infinity: measure everything
@@ -105,7 +100,6 @@ function processImage() {
     // exclude: exlude particles touching edges (optional, standard good practice)
     // clear: DO NOT clear results if batch processing, so we accumulate. 
     // But if single image, maybe we want to clear? Let's not clear to be safe, user can clear.
-    
     
     //-----------> changed sized particles (e.g., 2000, 10000, 50000 depending on image scale) - Jacob
     run("Analyze Particles...", "size=5000-Infinity show=Overlay display exclude include summarize");
